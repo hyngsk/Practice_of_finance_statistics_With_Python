@@ -59,6 +59,7 @@ plt.plot(maleHome, label=homeName + "남자")
 plt.plot(maleAway, label=awayName + "남자")
 plt.ylabel('연령대 별 인구 구성비(%)')
 plt.legend(loc='upper right', fontsize='xx-small')
+
 plt.subplot(212)
 plt.plot(femaleHome, label=homeName + "여자")
 plt.plot(femaleAway, label=awayName + "여자")
