@@ -31,150 +31,168 @@
 - 저는 어떤 5명을 평가하게 되나요?
    * 어느 학생이 어떤 5명의 학생을 평가하는지는 추후 공지
 -Doc-
-그래프 1 파이 그래프 (각 산업별 비중)
-그래프 2 꺾은선 그래프 (각 산업별 매출 추이)
-그래프 3 꺾은선 그래프 (각 산업별 고용자 수 추이)
+
+그래프 1 파이 그래프 (ICT산업별 인력현황 (2019))
+그래프 2 꺾은선 그래프 (ICT산업별 매출현황 (2019))
+그래프 3 꺾은선 그래프 (각 산업별 고용자 수 추이, 2011~2019)
+그래프 4 꺾은선 그래프 (각 산업별 인당 연평균 매출 추이, 2011~2019)
+
 """
 
-from matplotlib.animation import FuncAnimation
-# import seaborn as sns
-import csv
-# %%
+import seaborn as sns
 import pandas as pd
 import matplotlib.pyplot as plt
+import numpy as np
 
 # 5 3 3
 SalesOfICT = pd.read_csv('Sales_of_ICT_industry.csv')
 ManpowerOfICT = pd.read_csv('Manpower_of_ICT.csv')
-print("---------------------------------------")
-print(ManpowerOfICT.iloc[0])
-ManpowerOfICT.set_index('시점',inplace=True)
-ManpowerOfICT.index.values[0] = '대분류'
-ManpowerOfICT.index.values[1] = '소분류'
-ManpowerOfICT.columns = [[
-    '항목',
-    '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
-    '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
-    '정보통신방송서비스업', '정보통신방송서비스업', '정보통신방송서비스업',
-    '정보통신방송서비스업', '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업',
-    '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업'
-],ManpowerOfICT.iloc[0]]
-print("---------------------------------------")
-print(ManpowerOfICT.iloc[0])
-print("---------------------------------------")
-ManpowerOfICT.index.values[0] = '대분류'
-ManpowerOfICT.index.values[1] = '소분류'
-print(ManpowerOfICT.iloc[0])
-print("---------------------------------------")
-print(ManpowerOfICT.iloc[0, 2:7])
-print(ManpowerOfICT.iloc[0, 6:9])
-print(ManpowerOfICT.iloc[0, 9:12])
-print(ManpowerOfICT.index)
-ManpowerOfICT.index.values[0] = '대분류'
-ManpowerOfICT.index.values[1] = '소분류'
-print(ManpowerOfICT)
-df1 = pd.DataFrame(ManpowerOfICT,
-                   columns=[ManpowerOfICT.iloc[0],
-                            ManpowerOfICT.iloc[1]])
-df1.columns.names = ["Cidx1", "Cidx2"]
-print(df1)
-#
-# df1 = ManpowerOfICT.iloc[[0, -1],0:]
-# print(df1)
-# print(df1.iloc[0,1])
 
-# # info. of groups
-# group_names = ['정보통신방송기기업', '정보통신방송서비스업', '소프트웨어 개발 및 제작업']
-# group_sizes = [95, 54, 25]
-# # info. of subgroups
-# subgroup_names = ['A_1', 'A_2', 'A_3', 'A_4',
-#                   'B_1', 'B_2', 'B_3',
-#                   'C_1', 'C_2']
-# subgroup_sizes = [50, 30, 10, 5, 30, 20, 4, 20, 5]
-# # colors
-# a, b, c = [plt.cm.Reds, plt.cm.Greens, plt.cm.Blues]
-# # width
-# width_num = 0.4
-# # Outside Ring
-# fig, ax = plt.subplots()
-# ax.axis('equal')
-# pie_outside, _ = ax.pie(group_sizes,
-#                         radius=1.3,
-#                         labels=group_names,
-#                         labeldistance=0.8,
-#                         colors=[a(0.6), b(0.6), c(0.6)])
-# plt.setp(pie_outside,
-#          width=width_num,
-#          edgecolor='white')
-# # Inside Ring
-# pie_inside, plt_labels, junk = \
-#
-#     ax.pie(subgroup_sizes,
-#            radius=(1.3 - width_num),
-#            labels=subgroup_names,
-#            labeldistance=0.75,
-#            autopct='%1.1f%%',
-#            colors=[a(0.5), a(0.4), a(0.3), a(0.2),
-#                    b(0.5), b(0.4), b(0.3),
-#                    c(0.5), c(0.4)])
-# plt.setp(pie_inside,
-#          width=width_num,
-#          edgecolor='white')
-# plt.title('Donut Plot with Subgroups', fontsize=20)
-# plt.show()
+# %%
+# ManpowerOfICT 데이터 가공
+df = pd.DataFrame(ManpowerOfICT.values[1:10, 0:],
+                  columns=[[
+	                  '',
+	                  '항목',
+	                  '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
+	                  '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
+	                  '정보통신방송서비스업', '정보통신방송서비스업', '정보통신방송서비스업',
+	                  '정보통신방송서비스업', '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업',
+	                  '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업'
+                  ], ManpowerOfICT.iloc[0]])
+df.set_index('', inplace=True)
+df.columns.names = ['대분류', '소분류']
+df.index.names = ['시점']
 
+# SalesOfICT 데이터 가공
+df1 = pd.DataFrame(SalesOfICT.values[1:, 0:],
+                   columns=[[
+	                   '',
+	                   '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
+	                   '정보통신방송기기업', '정보통신방송기기업', '정보통신방송서비스업',
+	                   '정보통신방송서비스업', '정보통신방송서비스업', '소프트웨어 개발 및 제작업',
+	                   '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업'
+                   ], SalesOfICT.iloc[0]])
+df1.set_index('', inplace=True)
+df1.columns.names = ['대분류', '소분류']
+df1.index.names = ['시점']
+# 가공한 데이터의 타입 변경
+df = df.apply(pd.to_numeric, errors='coerce').fillna(0)
+df1 = df1.apply(pd.to_numeric, errors='coerce').fillna(0)
 
-# print(ManpowerOfICT.loc[['2019 p)']])
-# ManpowerOfICT['시점'] = pd.to_datetime(ManpowerOfICT['시점'])
+# %%
+# 그래프 1 파이 그래프 (각 산업별 비중, 2019)
+# info. of groups
+group_names = [df.columns[2][0], df.columns[8][0], df.columns[12][0]]
+group_sizes = [df.loc['2019 p)', (group_names[0], '소계')],
+               df.loc['2019 p)', (group_names[1], '소계')],
+               df.loc['2019 p)', (group_names[2], '소계')]]
 
-# plt.pie(ratio, labels=df1.iloc[0,1], shadow=True, startangle=270)
+subgroup_names = [df.columns[2][1], df.columns[3][1], df.columns[4][1],
+                  df.columns[5][1], df.columns[6][1], df.columns[8][1],
+                  df.columns[9][1], df.columns[10][1], df.columns[12][1],
+                  df.columns[13][1], df.columns[14][1]]
+
+subgroup_sizes = [df.loc['2019 p)', (group_names[0], subgroup_names[0])],
+                  df.loc['2019 p)', (group_names[0], subgroup_names[1])],
+                  df.loc['2019 p)', (group_names[0], subgroup_names[2])],
+                  df.loc['2019 p)', (group_names[0], subgroup_names[3])],
+                  df.loc['2019 p)', (group_names[0], subgroup_names[4])],
+                  df.loc['2019 p)', (group_names[1], subgroup_names[5])],
+                  df.loc['2019 p)', (group_names[1], subgroup_names[6])],
+                  df.loc['2019 p)', (group_names[1], subgroup_names[7])],
+                  df.loc['2019 p)', (group_names[2], subgroup_names[8])],
+                  df.loc['2019 p)', (group_names[2], subgroup_names[9])],
+                  df.loc['2019 p)', (group_names[2], subgroup_names[10])]]
+
+# %%
+# 파이차트의 내부차트 레이블 만드는 함수 (출처 : matplotlib.org 사이트)
+plt.rc('font', family='Malgun Gothic')
+a, b, c = [plt.cm.Reds, plt.cm.Greens, plt.cm.Blues]
+width_num = 0.4
+# Outside Ring
+fig, ax = plt.subplots(figsize=(15, 20), subplot_kw=dict(aspect="equal"))
+plt.rc('font', family='Malgun Gothic')
+pie_outside, _ = ax.pie(group_sizes, radius=1, labels=group_names,
+                        colors=[a(0.6), b(0.6), c(0.6)],
+                        startangle=270,
+                        wedgeprops=dict(width=0.3, edgecolor='w'),
+                        shadow=True)
+plt.setp(pie_outside, width=width_num, edgecolor='white')
+# Inside Ring
+plt.rc('font', family='Malgun Gothic')
+pie_inside, plt_labels, junk = ax.pie(subgroup_sizes, radius=(1 - width_num),
+                                      labeldistance=1, autopct='%1.1f%%', pctdistance=1.2,
+                                      colors=[a(0.2), a(0.3), a(0.4), a(0.5), a(0.6),
+                                              b(0.2), b(0.3), b(0.4),
+                                              c(0.2), c(0.3), c(0.4)],
+                                      startangle=270)
+plt.setp(pie_inside, width=width_num, edgecolor='white')
+
+bbox_props = dict(boxstyle="square,pad=0.4", fc="w", ec="k", lw=0.72)
+kw = dict(arrowprops=dict(arrowstyle="-"), bbox=bbox_props, zorder=0, va="center")
+for i, p in enumerate(pie_inside):
+	plt.rc('font', family='Malgun Gothic')
+	ang = (p.theta2 - p.theta1) / 2. + p.theta1
+	y = np.sin(np.deg2rad(ang))
+	x = np.cos(np.deg2rad(ang))
+	horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+	connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+	kw["arrowprops"].update({"connectionstyle": connectionstyle})
+	ax.annotate(subgroup_names[i], xy=(x, y), xytext=(1 * np.sign(x), 1.2 * y),
+	            horizontalalignment=horizontalalignment, **kw)
+
+plt.title('ICT산업별 인력현황 (2019)', loc='center', pad=10, fontsize=16)
 plt.show()
-'''
-nq['Date'] = pd.to_datetime(nq['Date'])
-nq.set_index(nq['Date'], inplace=True)
 
-print(ks.head())
-print(nq.head())
-'''
+# %%
+a, b, c = [plt.cm.Reds, plt.cm.Greens, plt.cm.Blues]
+width_num = 0.4
+# Outside Ring
+fig2, ax = plt.subplots(figsize=(15, 20), subplot_kw=dict(aspect="equal"))
+wedges, texts = ax.pie(subgroup_sizes, radius=1, wedgeprops=dict(width=0.5), startangle=270)
 
-"""
-그래프 1 파이 그래프 (각 산업별 비중, 2019)
-그래프 2 꺾은선 그래프 (각 산업별 매출 추이, 2011.01~2019.11)
-그래프 3 꺾은선 그래프 (각 산업별 고용자 수 추이, 2011~2019)
-그래프 4 꺾은선 그래프 (각 산업별 인당 연평균 매출 추이, 2011~2019)
-"""
+bbox_props = dict(boxstyle="square,pad=0.4", fc="w", ec="k", lw=0.72)
+kw2 = dict(arrowprops=dict(arrowstyle="-"), bbox=bbox_props, zorder=0, va="center")
+for i, p in enumerate(wedges):
+	ang = (p.theta2 - p.theta1) / 2. + p.theta1
+	y = np.sin(np.deg2rad(ang))
+	x = np.cos(np.deg2rad(ang))
+	horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+	connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+	kw2["arrowprops"].update({"connectionstyle": connectionstyle})
+	ax.annotate(subgroup_names[i], xy=(x, y), xytext=(1 * np.sign(x), 1.2 * y),
+	            horizontalalignment=horizontalalignment, **kw2)
+plt.rc('font', family='Malgun Gothic')
+plt.title('ICT산업별 매출현황 (2019)', loc='center', pad=10, fontsize=16)
+plt.show()
+# %%
+# 그래프 2 꺾은선 그래프 (각 산업별 매출 추이, 2011.01~2019.11)
+# 그래프 3 꺾은선 그래프 (각 산업별 고용자 수 추이, 2011~2019)
 
-# plt.rc('font', family='Malgun Gothic')
-# fig = plt.figure(figsize=(6, 4))
-# fig.autofmt_xdate(bottom=0.2, rotation=75, ha='right')
-# plt.subplot(211)
-# plt.title("KOSPI")
-# plt.grid()
-# plt.xlabel("Time")
-# plt.ylabel("￦")
-# plt.plot(ks['Date'], ks['Close'])
-# plt.subplot(212)
-# plt.title("NASDAQ")
-# plt.grid()
-# plt.xlabel("Time")
-# plt.ylabel("$")
-# plt.plot(nq['Date'], nq['Close'])
-#
-# # 수익률
-# incomeRate(ks)
-# ks_income_data = ks[['Adj Close', 'PriceLag1', 'PriceDiff', 'DailyReturn', 'UpDown']]
-# print(ks_income_data)
-# ks['UpDown'].value_counts()
-# plt.figure(figsize=(6, 4))
-# plt.plot(ks.index, ks['DailyReturn'], color='lightblue')
-# plt.axhline(y=0, color='red', ls='--')
-#
-# incomeRate(nq)
-# nq_income_data = ks[['Adj Close', 'PriceLag1', 'PriceDiff', 'DailyReturn', 'UpDown']]
-# print(nq_income_data)
-# ks['UpDown'].value_counts()
-# plt.figure(figsize=(6, 4))
-# plt.plot(nq.index, nq['DailyReturn'], color='lightblue')
-# plt.axhline(y=0, color='red', ls='--')
-#
+df.plot(title='연도별 ICT산업 종사자 추이', figsize=[15, 8], label='일교차')
+# colors = plt.cm.jet(np.linspace(0,1,))
+df1.plot(df1.index, df1['소계'], title = '연도별 ICT산업 매출액 추이', figsize = [15, 8])
+# x=df.index
+# y=group_names
+# plt.plot(x,y, figsize=[20, 20])
+# sns.jointplot(x='전자부품업', y='컴퓨터 및 주변기기엄', data=df, hue='시점')
+# ax = df1.plot(kind='barh', stacked=True, title="년도별 연령대 이용비율(%)", rot=0)
+# for p in ax.patches:
+#    left, bottom, width, height = p.get_bbox().bounds 
+#    ax.annotate("%.1f"%(width*100), xy=(left+width/2, bottom+height/2), ha='center', va='center')
+# plt.box(False)
 # plt.show()
+
+# %%
+# 그래프 4 꺾은선 그래프 (각 산업별 인당 연평균 매출 추이, 2011~2019)
+x = df.index
+y = subgroup_names
+# df.plot(df.index, subgroup_names, figsize=[20, 20])
+ax = df.plot(legend=False)
+for p in ax.patches:
+	left, bottom, width, height = p.get_bbox().bounds
+	ax.annotate("%.1f" % (height * 100), xy=(left + width / 2, bottom + height / 2), ha='center', va='center')
+plt.sca(ax)
+
+plt.box(False)
