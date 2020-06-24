@@ -11,17 +11,6 @@
         => 학과_학번_이름_보고서.hwp로 제출, 예) 국제금융학과_20180654_홍길동_보고서.hwp
         => 글자크기 11
    * 간략한 발표자료: 파워포인트 10페이지 이상 ~ 15페이지 이내
-   소개
-   1 (분석 주제)분석의 정의와 목표
-   2 필요한 데이터와 그 수집
-   3 사용한 프로그램과 그 코드 소개
-   4
-   5
-   6
-   7
-   8
-   9
-   마무리
         => 학과_학번_이름_발표자료.ppt로 제출, 예) 국제금융학과_20180654_홍길동_발표자료.ppt
    * 발표 동영상: 15분 이내 발표자료
         => 학과_학번_이름_발표영상.mp4로 제출, 예) 국제금융학과_20180654_홍길동_발표영상.mp4
@@ -41,66 +30,151 @@
    * 최종 점수를 기준으로 절대평가하여 성적 부여
 - 저는 어떤 5명을 평가하게 되나요?
    * 어느 학생이 어떤 5명의 학생을 평가하는지는 추후 공지
+-Doc-
+그래프 1 파이 그래프 (각 산업별 비중)
+그래프 2 꺾은선 그래프 (각 산업별 매출 추이)
+그래프 3 꺾은선 그래프 (각 산업별 고용자 수 추이)
 """
 
 from matplotlib.animation import FuncAnimation
-import seaborn as sns
+# import seaborn as sns
 import csv
 # %%
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# 5 3 3
+SalesOfICT = pd.read_csv('Sales_of_ICT_industry.csv')
+ManpowerOfICT = pd.read_csv('Manpower_of_ICT.csv')
+print("---------------------------------------")
+print(ManpowerOfICT.iloc[0])
+ManpowerOfICT.set_index('시점',inplace=True)
+ManpowerOfICT.index.values[0] = '대분류'
+ManpowerOfICT.index.values[1] = '소분류'
+ManpowerOfICT.columns = [[
+    '항목',
+    '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
+    '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
+    '정보통신방송서비스업', '정보통신방송서비스업', '정보통신방송서비스업',
+    '정보통신방송서비스업', '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업',
+    '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업'
+],ManpowerOfICT.iloc[0]]
+print("---------------------------------------")
+print(ManpowerOfICT.iloc[0])
+print("---------------------------------------")
+ManpowerOfICT.index.values[0] = '대분류'
+ManpowerOfICT.index.values[1] = '소분류'
+print(ManpowerOfICT.iloc[0])
+print("---------------------------------------")
+print(ManpowerOfICT.iloc[0, 2:7])
+print(ManpowerOfICT.iloc[0, 6:9])
+print(ManpowerOfICT.iloc[0, 9:12])
+print(ManpowerOfICT.index)
+ManpowerOfICT.index.values[0] = '대분류'
+ManpowerOfICT.index.values[1] = '소분류'
+print(ManpowerOfICT)
+df1 = pd.DataFrame(ManpowerOfICT,
+                   columns=[ManpowerOfICT.iloc[0],
+                            ManpowerOfICT.iloc[1]])
+df1.columns.names = ["Cidx1", "Cidx2"]
+print(df1)
+#
+# df1 = ManpowerOfICT.iloc[[0, -1],0:]
+# print(df1)
+# print(df1.iloc[0,1])
 
-def incomeRate(stock):
-    stock['PriceLag1'] = stock['Adj Close'].shift(-1)
-    stock['PriceDiff'] = stock['PriceLag1'] - stock['Adj Close']
-    stock['DailyReturn'] = stock['PriceDiff'] / stock['Adj Close']
-    stock['UpDown'] = [1 if stock['DailyReturn'].loc[date] > 0 else 0 for date in stock.index]
+# # info. of groups
+# group_names = ['정보통신방송기기업', '정보통신방송서비스업', '소프트웨어 개발 및 제작업']
+# group_sizes = [95, 54, 25]
+# # info. of subgroups
+# subgroup_names = ['A_1', 'A_2', 'A_3', 'A_4',
+#                   'B_1', 'B_2', 'B_3',
+#                   'C_1', 'C_2']
+# subgroup_sizes = [50, 30, 10, 5, 30, 20, 4, 20, 5]
+# # colors
+# a, b, c = [plt.cm.Reds, plt.cm.Greens, plt.cm.Blues]
+# # width
+# width_num = 0.4
+# # Outside Ring
+# fig, ax = plt.subplots()
+# ax.axis('equal')
+# pie_outside, _ = ax.pie(group_sizes,
+#                         radius=1.3,
+#                         labels=group_names,
+#                         labeldistance=0.8,
+#                         colors=[a(0.6), b(0.6), c(0.6)])
+# plt.setp(pie_outside,
+#          width=width_num,
+#          edgecolor='white')
+# # Inside Ring
+# pie_inside, plt_labels, junk = \
+#
+#     ax.pie(subgroup_sizes,
+#            radius=(1.3 - width_num),
+#            labels=subgroup_names,
+#            labeldistance=0.75,
+#            autopct='%1.1f%%',
+#            colors=[a(0.5), a(0.4), a(0.3), a(0.2),
+#                    b(0.5), b(0.4), b(0.3),
+#                    c(0.5), c(0.4)])
+# plt.setp(pie_inside,
+#          width=width_num,
+#          edgecolor='white')
+# plt.title('Donut Plot with Subgroups', fontsize=20)
+# plt.show()
 
 
-ks = pd.read_csv('KOSPI.csv')
-nq = pd.read_csv('NASDAQ.csv')
+# print(ManpowerOfICT.loc[['2019 p)']])
+# ManpowerOfICT['시점'] = pd.to_datetime(ManpowerOfICT['시점'])
 
-ks['Date'] = pd.to_datetime(ks['Date'])
-ks.set_index(ks['Date'], inplace=True)
+# plt.pie(ratio, labels=df1.iloc[0,1], shadow=True, startangle=270)
+plt.show()
+'''
 nq['Date'] = pd.to_datetime(nq['Date'])
 nq.set_index(nq['Date'], inplace=True)
+
 print(ks.head())
 print(nq.head())
+'''
 
+"""
+그래프 1 파이 그래프 (각 산업별 비중, 2019)
+그래프 2 꺾은선 그래프 (각 산업별 매출 추이, 2011.01~2019.11)
+그래프 3 꺾은선 그래프 (각 산업별 고용자 수 추이, 2011~2019)
+그래프 4 꺾은선 그래프 (각 산업별 인당 연평균 매출 추이, 2011~2019)
+"""
 
-
-plt.rc('font', family='Malgun Gothic')
-fig = plt.figure(figsize=(6, 4))
-fig.autofmt_xdate(bottom=0.2, rotation=75, ha='right')
-plt.subplot(211)
-plt.title("KOSPI")
-plt.grid()
-plt.xlabel("Time")
-plt.ylabel("￦")
-plt.plot(ks['Date'], ks['Close'])
-plt.subplot(212)
-plt.title("NASDAQ")
-plt.grid()
-plt.xlabel("Time")
-plt.ylabel("$")
-plt.plot(nq['Date'], nq['Close'])
-
-# 수익률
-incomeRate(ks)
-ks_income_data = ks[['Adj Close', 'PriceLag1', 'PriceDiff', 'DailyReturn', 'UpDown']]
-print(ks_income_data)
-ks['UpDown'].value_counts()
-plt.figure(figsize=(6, 4))
-plt.plot(ks.index, ks['DailyReturn'], color='lightblue')
-plt.axhline(y=0, color='red', ls='--')
-
-incomeRate(nq)
-nq_income_data = ks[['Adj Close', 'PriceLag1', 'PriceDiff', 'DailyReturn', 'UpDown']]
-print(nq_income_data)
-ks['UpDown'].value_counts()
-plt.figure(figsize=(6, 4))
-plt.plot(nq.index, nq['DailyReturn'], color='lightblue')
-plt.axhline(y=0, color='red', ls='--')
-
-plt.show()
+# plt.rc('font', family='Malgun Gothic')
+# fig = plt.figure(figsize=(6, 4))
+# fig.autofmt_xdate(bottom=0.2, rotation=75, ha='right')
+# plt.subplot(211)
+# plt.title("KOSPI")
+# plt.grid()
+# plt.xlabel("Time")
+# plt.ylabel("￦")
+# plt.plot(ks['Date'], ks['Close'])
+# plt.subplot(212)
+# plt.title("NASDAQ")
+# plt.grid()
+# plt.xlabel("Time")
+# plt.ylabel("$")
+# plt.plot(nq['Date'], nq['Close'])
+#
+# # 수익률
+# incomeRate(ks)
+# ks_income_data = ks[['Adj Close', 'PriceLag1', 'PriceDiff', 'DailyReturn', 'UpDown']]
+# print(ks_income_data)
+# ks['UpDown'].value_counts()
+# plt.figure(figsize=(6, 4))
+# plt.plot(ks.index, ks['DailyReturn'], color='lightblue')
+# plt.axhline(y=0, color='red', ls='--')
+#
+# incomeRate(nq)
+# nq_income_data = ks[['Adj Close', 'PriceLag1', 'PriceDiff', 'DailyReturn', 'UpDown']]
+# print(nq_income_data)
+# ks['UpDown'].value_counts()
+# plt.figure(figsize=(6, 4))
+# plt.plot(nq.index, nq['DailyReturn'], color='lightblue')
+# plt.axhline(y=0, color='red', ls='--')
+#
+# plt.show()

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 df = pd.read_csv('gapminder.tsv', sep='\t')
-#
+
 # %%
 # 년도에 따른 모든 국가의 기대수명(lifeExp)에대한 1인 총 생산(gdpPercap)
 facet = sns.FacetGrid(df, height=3, col_wrap=2, col='year', hue='country')
