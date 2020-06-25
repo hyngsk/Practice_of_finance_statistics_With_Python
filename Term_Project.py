@@ -32,11 +32,12 @@
    * 어느 학생이 어떤 5명의 학생을 평가하는지는 추후 공지
 -Doc-
 
-그래프 1 파이 그래프 (ICT산업별 인력현황 (2019))
-그래프 2 꺾은선 그래프 (ICT산업별 매출현황 (2019))
-그래프 3 꺾은선 그래프 (각 산업별 고용자 수 추이, 2011~2019)
-그래프 4 꺾은선 그래프 (각 산업별 인당 연평균 매출 추이, 2011~2019)
+'
 
+
+
+
+'
 """
 
 import seaborn as sns
@@ -45,65 +46,46 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # 5 3 3
-SalesOfICT = pd.read_csv('Sales_of_ICT_industry.csv')
+SalesOfICT = pd.read_csv('Sales_of_ICT_Industry.csv')
 ManpowerOfICT = pd.read_csv('Manpower_of_ICT.csv')
 
 # %%
 # ManpowerOfICT 데이터 가공
-df = pd.DataFrame(ManpowerOfICT.values[1:10, 0:],
-                  columns=[[
-	                  '',
-	                  '항목',
-	                  '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
-	                  '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
-	                  '정보통신방송서비스업', '정보통신방송서비스업', '정보통신방송서비스업',
-	                  '정보통신방송서비스업', '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업',
-	                  '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업'
-                  ], ManpowerOfICT.iloc[0]])
-df.set_index('', inplace=True)
-df.columns.names = ['대분류', '소분류']
-df.index.names = ['시점']
-
-# SalesOfICT 데이터 가공
-df1 = pd.DataFrame(SalesOfICT.values[1:, 0:],
-                   columns=[[
-	                   '',
-	                   '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
-	                   '정보통신방송기기업', '정보통신방송기기업', '정보통신방송서비스업',
-	                   '정보통신방송서비스업', '정보통신방송서비스업', '소프트웨어 개발 및 제작업',
-	                   '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업'
-                   ], SalesOfICT.iloc[0]])
+df1 = pd.DataFrame(ManpowerOfICT.values[1:10, 0:],
+                   columns=[['', '항목', '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
+                             '정보통신방송기기업', '정보통신방송기기업', '정보통신방송기기업',
+                             '정보통신방송서비스업', '정보통신방송서비스업', '정보통신방송서비스업',
+                             '정보통신방송서비스업', '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업',
+                             '소프트웨어 개발 및 제작업', '소프트웨어 개발 및 제작업'
+                             ], ManpowerOfICT.iloc[0]])
 df1.set_index('', inplace=True)
 df1.columns.names = ['대분류', '소분류']
 df1.index.names = ['시점']
-# 가공한 데이터의 타입 변경
-df = df.apply(pd.to_numeric, errors='coerce').fillna(0)
-df1 = df1.apply(pd.to_numeric, errors='coerce').fillna(0)
 
 # %%
 # 그래프 1 파이 그래프 (각 산업별 비중, 2019)
 # info. of groups
-group_names = [df.columns[2][0], df.columns[8][0], df.columns[12][0]]
-group_sizes = [df.loc['2019 p)', (group_names[0], '소계')],
-               df.loc['2019 p)', (group_names[1], '소계')],
-               df.loc['2019 p)', (group_names[2], '소계')]]
+group_names1 = [df1.columns[2][0], df1.columns[8][0], df1.columns[12][0]]
+group_sizes1 = [df1.loc['2019 p)', (group_names1[0], '소계')],
+                df1.loc['2019 p)', (group_names1[1], '소계')],
+                df1.loc['2019 p)', (group_names1[2], '소계')]]
 
-subgroup_names = [df.columns[2][1], df.columns[3][1], df.columns[4][1],
-                  df.columns[5][1], df.columns[6][1], df.columns[8][1],
-                  df.columns[9][1], df.columns[10][1], df.columns[12][1],
-                  df.columns[13][1], df.columns[14][1]]
+subgroup_names1 = [df1.columns[2][1], df1.columns[3][1], df1.columns[4][1],
+                   df1.columns[5][1], df1.columns[6][1], df1.columns[8][1],
+                   df1.columns[9][1], df1.columns[10][1], df1.columns[12][1],
+                   df1.columns[13][1], df1.columns[14][1]]
 
-subgroup_sizes = [df.loc['2019 p)', (group_names[0], subgroup_names[0])],
-                  df.loc['2019 p)', (group_names[0], subgroup_names[1])],
-                  df.loc['2019 p)', (group_names[0], subgroup_names[2])],
-                  df.loc['2019 p)', (group_names[0], subgroup_names[3])],
-                  df.loc['2019 p)', (group_names[0], subgroup_names[4])],
-                  df.loc['2019 p)', (group_names[1], subgroup_names[5])],
-                  df.loc['2019 p)', (group_names[1], subgroup_names[6])],
-                  df.loc['2019 p)', (group_names[1], subgroup_names[7])],
-                  df.loc['2019 p)', (group_names[2], subgroup_names[8])],
-                  df.loc['2019 p)', (group_names[2], subgroup_names[9])],
-                  df.loc['2019 p)', (group_names[2], subgroup_names[10])]]
+subgroup_sizes1 = [df1.loc['2019 p)', (group_names1[0], subgroup_names1[0])],
+                   df1.loc['2019 p)', (group_names1[0], subgroup_names1[1])],
+                   df1.loc['2019 p)', (group_names1[0], subgroup_names1[2])],
+                   df1.loc['2019 p)', (group_names1[0], subgroup_names1[3])],
+                   df1.loc['2019 p)', (group_names1[0], subgroup_names1[4])],
+                   df1.loc['2019 p)', (group_names1[1], subgroup_names1[5])],
+                   df1.loc['2019 p)', (group_names1[1], subgroup_names1[6])],
+                   df1.loc['2019 p)', (group_names1[1], subgroup_names1[7])],
+                   df1.loc['2019 p)', (group_names1[2], subgroup_names1[8])],
+                   df1.loc['2019 p)', (group_names1[2], subgroup_names1[9])],
+                   df1.loc['2019 p)', (group_names1[2], subgroup_names1[10])]]
 
 # %%
 # 파이차트의 내부차트 레이블 만드는 함수 (출처 : matplotlib.org 사이트)
@@ -113,7 +95,7 @@ width_num = 0.4
 # Outside Ring
 fig, ax = plt.subplots(figsize=(15, 20), subplot_kw=dict(aspect="equal"))
 plt.rc('font', family='Malgun Gothic')
-pie_outside, _ = ax.pie(group_sizes, radius=1, labels=group_names,
+pie_outside, _ = ax.pie(group_sizes1, radius=1, labels=group_names1,
                         colors=[a(0.6), b(0.6), c(0.6)],
                         startangle=270,
                         wedgeprops=dict(width=0.3, edgecolor='w'),
@@ -121,7 +103,7 @@ pie_outside, _ = ax.pie(group_sizes, radius=1, labels=group_names,
 plt.setp(pie_outside, width=width_num, edgecolor='white')
 # Inside Ring
 plt.rc('font', family='Malgun Gothic')
-pie_inside, plt_labels, junk = ax.pie(subgroup_sizes, radius=(1 - width_num),
+pie_inside, plt_labels, junk = ax.pie(subgroup_sizes1, radius=(1 - width_num),
                                       labeldistance=1, autopct='%1.1f%%', pctdistance=1.2,
                                       colors=[a(0.2), a(0.3), a(0.4), a(0.5), a(0.6),
                                               b(0.2), b(0.3), b(0.4),
@@ -139,60 +121,168 @@ for i, p in enumerate(pie_inside):
 	horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
 	connectionstyle = "angle,angleA=0,angleB={}".format(ang)
 	kw["arrowprops"].update({"connectionstyle": connectionstyle})
-	ax.annotate(subgroup_names[i], xy=(x, y), xytext=(1 * np.sign(x), 1.2 * y),
+	ax.annotate(subgroup_names1[i], xy=(x, y), xytext=(1 * np.sign(x), 1.2 * y),
 	            horizontalalignment=horizontalalignment, **kw)
 
 plt.title('ICT산업별 인력현황 (2019)', loc='center', pad=10, fontsize=16)
 plt.show()
 
 # %%
+# SalesOfICT 데이터 가공
+df2 = pd.DataFrame(SalesOfICT.values[1:, 0:],
+                   columns=[['', '정보통신방송기기', '정보통신방송기기', '정보통신방송기기',
+                             '정보통신방송기기', '정보통신방송기기', '정보통신방송기기',
+                             '정보통신방송서비스', '정보통신방송서비스', '정보통신방송서비스',
+                             '정보통신방송서비스', '소프트웨어', '소프트웨어',
+                             '소프트웨어', '소프트웨어'
+                             ], SalesOfICT.iloc[0]])
+df2.set_index('', inplace=True)
+df2.index.names = ['시점']
+df2.columns.names = ['대분류', '소분류']
+# %%
+# 가공한 데이터의 타입 변경
+df1 = df1.apply(pd.to_numeric, errors='coerce').fillna(0)
+df2 = df2.apply(pd.to_numeric, errors='coerce').fillna(0)
+
+# %%
+group_names2 = [df2.columns[2][0], df2.columns[8][0], df2.columns[12][0]]
+group_sizes2 = [df2.loc['2019. 01 p)', (group_names2[0], '소계')],
+                df2.loc['2019. 01 p)', (group_names2[1], '소계')],
+                df2.loc['2019. 01 p)', (group_names2[2], '소계')]]
+
+subgroup_names2 = [df2.columns[1][1], df2.columns[2][1], df2.columns[3][1],
+                   df2.columns[4][1], df2.columns[5][1], df2.columns[7][1],
+                   df2.columns[8][1], df2.columns[9][1], df2.columns[11][1],
+                   df2.columns[12][1], df2.columns[13][1]]
+
+subgroup_sizes2 = [df2.loc['2019. 01 p)', (group_names2[0], subgroup_names2[0])],
+                   df2.loc['2019. 01 p)', (group_names2[0], subgroup_names2[1])],
+                   df2.loc['2019. 01 p)', (group_names2[0], subgroup_names2[2])],
+                   df2.loc['2019. 01 p)', (group_names2[0], subgroup_names2[3])],
+                   df2.loc['2019. 01 p)', (group_names2[0], subgroup_names2[4])],
+                   df2.loc['2019. 01 p)', (group_names2[1], subgroup_names2[5])],
+                   df2.loc['2019. 01 p)', (group_names2[1], subgroup_names2[6])],
+                   df2.loc['2019. 01 p)', (group_names2[1], subgroup_names2[7])],
+                   df2.loc['2019. 01 p)', (group_names2[2], subgroup_names2[8])],
+                   df2.loc['2019. 01 p)', (group_names2[2], subgroup_names2[9])],
+                   df2.loc['2019. 01 p)', (group_names2[2], subgroup_names2[10])]]
+# %%
 a, b, c = [plt.cm.Reds, plt.cm.Greens, plt.cm.Blues]
 width_num = 0.4
 # Outside Ring
 fig2, ax = plt.subplots(figsize=(15, 20), subplot_kw=dict(aspect="equal"))
-wedges, texts = ax.pie(subgroup_sizes, radius=1, wedgeprops=dict(width=0.5), startangle=270)
+
+wedges, texts, junk = ax.pie(subgroup_sizes2, radius=1, autopct='%1.1f%%',
+                             pctdistance=0.9,
+                             colors=[a(0.2), a(0.3), a(0.4), a(0.5), a(0.6),
+                                     b(0.2), b(0.3), b(0.4),
+                                     c(0.2), c(0.3), c(0.4)],
+                             startangle=270)
+plt.setp(wedges, width=0.3, edgecolor='white')
+
+# bbox_props = dict(boxstyle="square,pad=0.4", fc="w", ec="k", lw=0.72)
+# kw2 = dict(arrowprops=dict(arrowstyle="-"), bbox=bbox_props, zorder=0, va="center")
+
+# for i, p in enumerate(wedges):
+# 	ang = (p.theta2 - p.theta1) / 2. + p.theta1
+# 	y = np.sin(np.deg2rad(ang))
+# 	x = np.cos(np.deg2rad(ang))
+# 	horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
+# 	connectionstyle = "angle,angleA=0,angleB={}".format(ang)
+# 	kw2["arrowprops"].update({"connectionstyle": connectionstyle})
+# 	ax.annotate(subgroup_names2[i], xy=(x, y), xytext=(1 * np.sign(x), 1.2 * y),
+# 	            horizontalalignment=horizontalalignment, **kw2)
+plt.rc('font', family='Malgun Gothic')
+plt.title('(외부) ICT산업별 매출현황 (2019)\n (내부) ICT산업별 종사자 수(2019)', loc='center', pad=10, fontsize=16)
+
+pie_inside, plt_labels, junk = ax.pie(subgroup_sizes1, radius=(1 - width_num),
+                                      labeldistance=1, autopct='%1.1f%%', pctdistance=1.2,
+                                      colors=[a(0.2), a(0.3), a(0.4), a(0.5), a(0.6),
+                                              b(0.2), b(0.3), b(0.4),
+                                              c(0.2), c(0.3), c(0.4)],
+                                      startangle=270)
+plt.setp(pie_inside, width=width_num, edgecolor='white')
 
 bbox_props = dict(boxstyle="square,pad=0.4", fc="w", ec="k", lw=0.72)
-kw2 = dict(arrowprops=dict(arrowstyle="-"), bbox=bbox_props, zorder=0, va="center")
-for i, p in enumerate(wedges):
+kw = dict(arrowprops=dict(arrowstyle="-"), bbox=bbox_props, zorder=0, va="center")
+for i, p in enumerate(pie_inside):
+	plt.rc('font', family='Malgun Gothic')
 	ang = (p.theta2 - p.theta1) / 2. + p.theta1
 	y = np.sin(np.deg2rad(ang))
 	x = np.cos(np.deg2rad(ang))
 	horizontalalignment = {-1: "right", 1: "left"}[int(np.sign(x))]
 	connectionstyle = "angle,angleA=0,angleB={}".format(ang)
-	kw2["arrowprops"].update({"connectionstyle": connectionstyle})
-	ax.annotate(subgroup_names[i], xy=(x, y), xytext=(1 * np.sign(x), 1.2 * y),
-	            horizontalalignment=horizontalalignment, **kw2)
-plt.rc('font', family='Malgun Gothic')
-plt.title('ICT산업별 매출현황 (2019)', loc='center', pad=10, fontsize=16)
+	kw["arrowprops"].update({"connectionstyle": connectionstyle})
+	ax.annotate(subgroup_names1[i], xy=(x, y), xytext=(1 * np.sign(x), 1.2 * y),
+	            horizontalalignment=horizontalalignment, **kw)
+
 plt.show()
 # %%
 # 그래프 2 꺾은선 그래프 (각 산업별 매출 추이, 2011.01~2019.11)
 # 그래프 3 꺾은선 그래프 (각 산업별 고용자 수 추이, 2011~2019)
 
-df.plot(title='연도별 ICT산업 종사자 추이', figsize=[15, 8], label='일교차')
-# colors = plt.cm.jet(np.linspace(0,1,))
-df1.plot(df1.index, df1['소계'], title = '연도별 ICT산업 매출액 추이', figsize = [15, 8])
-# x=df.index
-# y=group_names
-# plt.plot(x,y, figsize=[20, 20])
-# sns.jointplot(x='전자부품업', y='컴퓨터 및 주변기기엄', data=df, hue='시점')
-# ax = df1.plot(kind='barh', stacked=True, title="년도별 연령대 이용비율(%)", rot=0)
-# for p in ax.patches:
-#    left, bottom, width, height = p.get_bbox().bounds 
-#    ax.annotate("%.1f"%(width*100), xy=(left+width/2, bottom+height/2), ha='center', va='center')
-# plt.box(False)
-# plt.show()
+# df.plot(title='연도별 ICT산업 종사자 추이', figsize=[15, 8], label='일교차')
+
+a1 = df1.loc[:, (group_names1[0], subgroup_names1[0:])]
+a2 = df1.loc[:, (group_names1[1], subgroup_names1[0:])]
+a3 = df1.loc[:, (group_names1[2], subgroup_names1[0:])]
+b1 = df2.loc[:, (group_names2[0], subgroup_names2[0:])]
+b2 = df2.loc[:, (group_names2[1], subgroup_names2[0:])]
+b3 = df2.loc[:, (group_names2[2], subgroup_names2[0:])]
+fig, axes = plt.subplots(2, 3, figsize=(20, 10))
+
+plt.subplots_adjust(left=0.05,right=0.86,wspace=0.5, hspace=0.2)
+plt.rc('font', family='Malgun Gothic')
+a1.plot(title=group_names1[0] + '의 종사자 추이', fontsize='small',  # ylabel='(명)',
+        color=[a(0.2), a(0.3), a(0.4), a(0.5), a(0.6)], ax=axes[0, 0])
+axes[0, 0].legend(subgroup_names1[0:5], loc='bottom left', bbox_to_anchor=(1, 0.5), fontsize='small')
+
+a1.plot(title=group_names1[1] + '의 종사자 추이', fontsize='small',  # ylabel='(명)',
+        color=[b(0.2), b(0.3), b(0.4)], ax=axes[0, 1])
+plt.ylabel('(명)')
+axes[0, 1].legend(subgroup_names1[5:8], loc='bottom left', bbox_to_anchor=(1, 0.5), fontsize='small')
+
+a3.plot(title=group_names1[2] + '의 종사자 추이', fontsize='small',  # ylabel='(명)',
+        color=[c(0.2), c(0.3), c(0.4)], ax=axes[0, 2])
+axes[0, 2].legend(subgroup_names1[8:11], loc='upper left', bbox_to_anchor=(1, 0.5), fontsize='small')
+
+b1.plot(title=group_names2[0] + '부문 매출 추이', fontsize='small',  # ylabel='백만원',
+        color=[a(0.2), a(0.3), a(0.4), a(0.5), a(0.6)], ax=axes[1, 0])
+axes[1, 0].legend(subgroup_names2[0:5], loc='upper left', bbox_to_anchor=(1, 0.5), fontsize='small')
+
+b2.plot(title=group_names2[1] + '부문 매출 추이', fontsize='small',  # ylabel='백만원',
+        color=[b(0.2), b(0.3), b(0.4)], ax=axes[1, 1])
+axes[1, 1].legend(subgroup_names2[5:8], loc='left', bbox_to_anchor=(1, 0.5), fontsize='small')
+
+b3.plot(title=group_names2[2] + '부문 매출 추이', fontsize='small',  # ylabel='백만원',
+        color=[c(0.2), c(0.3), c(0.4)], ax=axes[1, 2])
+axes[1, 2].legend(subgroup_names2[8:11], loc='upper left', bbox_to_anchor=(1, 0.5), fontsize='small')
 
 # %%
 # 그래프 4 꺾은선 그래프 (각 산업별 인당 연평균 매출 추이, 2011~2019)
-x = df.index
-y = subgroup_names
-# df.plot(df.index, subgroup_names, figsize=[20, 20])
-ax = df.plot(legend=False)
-for p in ax.patches:
-	left, bottom, width, height = p.get_bbox().bounds
-	ax.annotate("%.1f" % (height * 100), xy=(left + width / 2, bottom + height / 2), ha='center', va='center')
-plt.sca(ax)
+t1 = df1.drop([df1.columns[0], df1.columns[1], df1.columns[7], df1.columns[11]], axis=1)
+t2 = df2.loc[['2011. 11', '2012. 11', '2013. 11', '2014. 11', '2015. 11', '2016. 11', '2017. 11', '2018. 11 p)', '2019. 11 p)']]
+t2 = t2.drop([t2.columns[0], t2.columns[6], t2.columns[10]], axis=1)
 
-plt.box(False)
+# %%
+t2.columns = t1.columns
+
+print(t2.columns)
+# %%
+tmp = {}
+t = 0
+for i in t1.index.values:
+	print(t2.index.values[t])
+	tmp[t2.index.values[t]] = i
+	t += 1
+t2.rename(index=tmp, inplace=True)
+# %%
+div = t2.div(t1.loc[t1.index.values, :])
+colors = [a(0.2), a(0.3), a(0.4), a(0.5), a(0.6),
+          b(0.2), b(0.3), b(0.4),
+          c(0.2), c(0.3), c(0.4)]
+# ICT산업의 1인당 연간생산(매출)액
+div.plot(title='ICT산업 종사자 1인당 연간 매출(생산)액', color=colors,figsize=(15, 8))
+plt.ylabel('백만원')
+plt.legend(subgroup_names2, loc='upper left', bbox_to_anchor=(1, 0.5), fontsize='small')
+plt.show()
